@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ car.name }} - Details{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url('/media/carlistbackground.jpg');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+</style>
+
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+    {% if car.image %}
+      <img src="{{ car.image.url }}" class="card-img-top mb-3" alt="{{ car.name }}">
+    {% endif %}
+    <div class="card-body">
+      <h1 class="card-title">{{ car.name }}</h1>
+      <h2 class="card-subtitle mb-3 text-muted">{{ car.brand }}</h2>
+      <p><strong>Price per day:</strong> ₹{{ car.price_per_day }}</p>
+      <p><strong>Available:</strong> {% if car.available %}Yes{% else %}No{% endif %}</p>
+      <a href="{% url 'car_list' %}" class="btn btn-secondary">Back to Cars</a>
+      <a href="{% url 'book_car' car.id %}" class="btn btn-success">Book Now</a>
+    </div>
+  </div>
+  
+  {% if car.images.all %}
+  <div class="mt-4">
+    <h3>Additional Images</h3>
+    <div class="row">
+      {% for image in car.images.all %}
+      <div class="col-md-3">
+        <img src="{{ image.image.url }}" class="img-thumbnail" alt="{{ car.name }} extra image">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

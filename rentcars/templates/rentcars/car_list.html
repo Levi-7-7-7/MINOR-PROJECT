@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Cars</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('/media/carlistbackground.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for better readability */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            background-color: #2575fc;
+            border-color: #2575fc;
+        }
+
+        .btn-primary:hover {
+            background-color: #1a60d8;
+            border-color: #1a60d8;
+        }
+
+        .navbar-brand, .navbar-nav a {
+            color: #333 !important;
+        }
+
+        .navbar-nav a {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'car_list' %}">Car Rental</a>
+            <div class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <span class="navbar-text">Welcome, {{ user.username }}</span>
+                    <a href="{% url 'logout' %}" class="btn btn-danger ms-2">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary ms-2">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-success ms-2">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Available Rental Cars</h1>
+        <div class="row">
+            {% for car in cars %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    {% if car.image %}
+                        <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.name }}">
+                    {% else %}
+                        <!-- Optional placeholder image -->
+                        <img src="{% static 'images/placeholder_car.jpg' %}" class="card-img-top" alt="No Image Available">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car.name }}</h5>
+                        <p class="card-text"><strong>Brand:</strong> {{ car.brand }}</p>
+                        <p class="card-text"><strong>Price per day:</strong> &#8377;{{ car.price_per_day }}</p>
+                        <a href="{% url 'car_detail' car.id %}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center">No cars available.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>
